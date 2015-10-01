@@ -4,24 +4,22 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className
-){
+var getElementsByClassName = function(className){
     var result = [];
 
-  // identify starting node
-  var node = node || document.body;
+  // Starting node
+  Node = Node || document.body;
 
-  // check for className of starting node and add to results array if exists
-  if( node.className.split(' ').indexOf(className) != -1 ){
-    result.push( node );
+  // check for className of starting node // add to results if available 
+  if(Node.className === "targetClassName"){
+    return true;
   }
 
-  // if starting node has children, check each one for className
-  if( node.children ){
-    // iterate over all children
-    for(var i = 0, count = node.children.length; i < count; i++){
+  // Check node children for className
+  if(Node.children){
+    for(var i = 0, count = Node.children.length; i < count; i++){
       // recursively call on children and check for className
-      result = result.concat( getElementsByClassName(className, node.children[i]) );
+      result = result.concat(getElementsByClassName(className, Node.children[i]) );
     }
   }
   return result;
