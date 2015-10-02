@@ -3,32 +3,39 @@
 
 // but you don't so you're going to write it from scratch:
 
-var stringifyJSON = function(obj) {
+var stringifyJSON = function(obj){
+  if (obj === null){
+    return "null"
+  }
+  if (typeof obj === "function"){
+    return "undefined";
+  }
+  if (obj === undefined){
+    return "undefined";
+  }
+  if (typeof obj === "number"){
+    return obj.toString();
+  }
+  if (typeof obj === "boolean"){
+    return obj.toString();
+  }
+  if (typeof obj === "string"){
+    return '"'+obj+'"';
+  }
   if (Array.isArray(obj)){
-    var result = [];
-    for (var i = 0; i < obj.length; i++){
-      if (obj[i] === undefined || typeof obj[i] === 'function'){
-        continue;
-      }
-      result.push(stringifyJSON(obj[i]));
+    var stringValues = obj.map(function(value){
+      return stringifyJSON(value);
+    })
+    var stringGuts = stringValues.join(",")
+    return "[" + stringGuts + "]";
+  }
+  var objGuts = [];
+  for (var key in obj){
+    if (typeof obj[key] === "function" || obj[key] === undefined){
+      continue;
     }
-    return '[' + result + ']';
+    var keyString = '"'+ key.toString() + '"' + ":"
+    objGuts.push(keyString + stringifyJSON(obj[key]));
   }
-
-  if (typeof obj === 'object' && obj){
-    var result = [];
-    for (var key in obj){
-      if (obj[key] === undefined || typeof obj[key] === 'function'){
-        continue;
-      }
-      result.push(stringifyJSON(key) + ':' + stringifyJSON(obj[key]));
-    }
-    return '{' + result + '}';
-  }
-
-  if (typeof obj === 'string'){
-    return '"' + obj + '"';
-  }
-
-  return '' + obj;
+  return '{' + objGuts.join(",") + '}';
 };
